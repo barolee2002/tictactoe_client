@@ -66,7 +66,7 @@ public class SocketHandle implements Runnable {
     public void run() {
 
         try {
-            socketOfClient = new Socket("192.168.100.3", 8080);
+            socketOfClient = new Socket("192.168.137.206", 8080);
             System.out.println("Kết nối thành công!");
             outputWriter = new BufferedWriter(new OutputStreamWriter(socketOfClient.getOutputStream()));
             BufferedReader inputReader = new BufferedReader(new InputStreamReader(socketOfClient.getInputStream()));
