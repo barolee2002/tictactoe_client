@@ -189,8 +189,6 @@ public class GameClientFrm extends javax.swing.JFrame {
     public void exitGame() {
         try {
             timer.stop();
-            voiceCloseMic();
-            voiceStopListening();
             Client.socketHandle.write("left-room,");
             Client.closeAllViews();
             Client.openView(Client.View.HOMEPAGE);
@@ -203,8 +201,6 @@ public class GameClientFrm extends javax.swing.JFrame {
 
     public void stopAllThread() {
         timer.stop();
-        voiceCloseMic();
-        voiceStopListening();
     }
 
     @SuppressWarnings("unchecked")
@@ -293,17 +289,6 @@ public class GameClientFrm extends javax.swing.JFrame {
             jFrame3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 300, Short.MAX_VALUE)
         );
-
-//        javax.swing.GroupLayout jFrame4Layout = new javax.swing.GroupLayout(jFrame4.getContentPane());
-//        jFrame4.getContentPane().setLayout(jFrame4Layout);
-//        jFrame4Layout.setHorizontalGroup(
-//            jFrame4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//            .addGap(0, 400, Short.MAX_VALUE)
-//        );
-//        jFrame4Layout.setVerticalGroup(
-//            jFrame4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-//            .addGap(0, 300, Short.MAX_VALUE)
-//        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAutoRequestFocus(false);
@@ -713,7 +698,24 @@ public class GameClientFrm extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(rootPane, ex.getMessage());
         }
     }//GEN-LAST:event_drawRequestButtonActionPerformed
+    public void showRematchGameDialog(String result) {
+        int res = JOptionPane.showConfirmDialog(rootPane, result +"Bạn có muốn đấu lại với người chơi này", "Đấu lại", JOptionPane.YES_NO_OPTION);
 
+        if (res == JOptionPane.YES_OPTION) {
+            try {
+                Client.socketHandle.write("confirm-rematch-game,");
+                Client.openView(Client.View.GAME_NOTICE, "Tái đấu", "Đợi đối thủ phản hồi");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+            }
+        } else {
+            try {
+                Client.socketHandle.write("no-rematch-game,");
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(rootPane, ex.getMessage());
+            }
+        }
+    }
     private void helpMenuItemActionPerformed(ActionEvent evt) {//GEN-FIRST:event_helpMenuItemActionPerformed
         // TODO add your handling code here:
         JOptionPane.showMessageDialog(rootPane, "Luật chơi: luật quốc tế 5 nước chặn 2 đầu\n"
@@ -721,61 +723,16 @@ public class GameClientFrm extends javax.swing.JFrame {
                 + "Người chơi trước đánh X, người chơi sau đánh O\n"
                 + "Bạn có 20 giây cho mỗi lượt đánh, quá 20 giây bạn sẽ thua\n"
                 + "Khi cầu hòa, nếu đối thủ đồng ý thì ván hiện tại được hủy kết quả\n"
-                + "Với mỗi ván chơi bạn có thêm 1 điểm, nếu hòa bạn được thêm 5 điểm,\n"
+                + "Với mỗi ván chơi bạn có thêm 1 điểm, nếu hòa bạn được 0 điểm,\n"
                 + "nếu thắng bạn được thêm 10 điểm\n"
                 + "Chúc bạn chơi game vui vẻ");
-    }//GEN-LAST:event_helpMenuItemActionPerformed
+    }//GEN-LAST:eventhvj_helpMenuItemActionPerformed
 
     private void competotorButtonImageActionPerformed(ActionEvent evt) {//GEN-FIRST:event_competotorButtonImageActionPerformed
 
         Client.openView(Client.View.COMPETITOR_INFO, competitor);
 
     }//GEN-LAST:event_competotorButtonImageActionPerformed
-
-//    private void microphoneStatusButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_microphoneStatusButtonActionPerformed
-//        if (isSending) {
-//            try {
-//                Client.socketHandle.write("voice-message,close-mic");
-//            } catch (IOException ex) {
-//                JOptionPane.showMessageDialog(rootPane, "Có lỗi xảy ra");
-//            }
-//            microphoneStatusButton.setIcon(new ImageIcon("assets/game/mute.png"));
-//            voiceCloseMic();
-//            microphoneStatusButton.setToolTipText("Mic đang tắt");
-//
-//        } else {
-//            try {
-//                Client.socketHandle.write("voice-message,open-mic");
-//            } catch (IOException ex) {
-//                JOptionPane.showMessageDialog(rootPane, "Có lỗi xảy ra");
-//            }
-//            microphoneStatusButton.setIcon(new ImageIcon("assets/game/88634.png"));
-//            voiceOpenMic();
-//            microphoneStatusButton.setToolTipText("Mic đang bật");
-//        }
-//    }//GEN-LAST:event_microphoneStatusButtonActionPerformed
-//
-//    private void speakerStatusButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_speakerStatusButtonActionPerformed
-//        if (isListening) {
-//            try {
-//                Client.socketHandle.write("voice-message,close-speaker");
-//            } catch (IOException ex) {
-//                JOptionPane.showMessageDialog(rootPane, "Có lỗi xảy ra");
-//            }
-//            speakerStatusButton.setIcon(new ImageIcon("assets/game/mutespeaker.png"));
-//            voiceStopListening();
-//            speakerStatusButton.setToolTipText("Âm thanh trò chuyện đang tắt");
-//        } else {
-//            try {
-//                Client.socketHandle.write("voice-message,open-speaker");
-//            } catch (IOException ex) {
-//                JOptionPane.showMessageDialog(rootPane, "Có lỗi xảy ra");
-//            }
-//            voiceListening();
-//            speakerStatusButton.setIcon(new ImageIcon("assets/game/speaker.png"));
-//            speakerStatusButton.setToolTipText("Âm thanh trò chuyện đang bật");
-//        }
-//    }//GEN-LAST:event_speakerStatusButtonActionPerformed
 
     private void messageTextFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_messageTextFieldKeyPressed
         if (evt.getKeyCode() == 10) {
@@ -823,18 +780,6 @@ public class GameClientFrm extends javax.swing.JFrame {
         }
     }
 
-    public void playSound2() {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("assets/sound/win.wav").getAbsoluteFile());
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.start();
-        } catch (Exception ex) {
-            System.out.println("Error with playing sound.");
-            ex.printStackTrace();
-        }
-    }
-
     public void stopTimer() {
         timer.stop();
     }
@@ -871,8 +816,9 @@ public class GameClientFrm extends javax.swing.JFrame {
                                     //Xử lý khi người chơi này thắng
                                     setEnableButton(false);
                                     increaseWinMatchToUser();
-                                    Client.openView(Client.View.GAME_NOTICE, "Bạn đã thắng", "Đang thiết lập ván chơi mới");
+//                                    Client.openView(Client.View.GAME_NOTICE, "Bạn đã thắng", "Đang thiết lập ván chơi mới");
                                     Client.socketHandle.write("win," + a + "," + b);
+                                    showRematchGameDialog("Bạn đã thắng");
                                 } else {
                                     Client.socketHandle.write("caro," + a + "," + b);
                                     displayCompetitorTurn();
@@ -1004,141 +950,8 @@ public class GameClientFrm extends javax.swing.JFrame {
         }
     }
 
-    public void voiceOpenMic() {
-
-        Thread sendThread = new Thread() {
-
-            @Override
-            public void run() {
-                AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100, 16, 2, 4, 44100, true);
-                TargetDataLine microphone;
-                try {
-                    microphone = AudioSystem.getTargetDataLine(format);
-
-                    DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
-                    microphone = (TargetDataLine) AudioSystem.getLine(info);
-                    microphone.open(format);
-
-                    ByteArrayOutputStream out = new ByteArrayOutputStream();
-                    int numBytesRead;
-                    int CHUNK_SIZE = 1024;
-                    byte[] data = new byte[microphone.getBufferSize() / 5];
-                    microphone.start();
-
-                    DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, format);
-
-                    int port = 5555;
-
-                    InetAddress address = InetAddress.getByName(competitorIP);
-                    DatagramSocket socket = new DatagramSocket();
-                    byte[] buffer = new byte[1024];
-                    isSending = true;
-                    while (isSending) {
-                        numBytesRead = microphone.read(data, 0, CHUNK_SIZE);
-                        out.write(data, 0, numBytesRead);
-                        DatagramPacket request = new DatagramPacket(data, numBytesRead, address, port);
-                        socket.send(request);
-
-                    }
-                    out.close();
-                    socket.close();
-                    microphone.close();
-                } catch (LineUnavailableException | IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        };
-        sendThread.start();
-
-    }
-
-    public void voiceCloseMic() {
-        isSending = false;
-    }
 
 
-    public void voiceListening() {
-        //                    microphone = AudioSystem.getTargetDataLine(format);
-        //                    DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
-        //                    microphone = (TargetDataLine) AudioSystem.getLine(info);
-        //                    microphone.open(format);
-        //                    microphone.start();
-        Thread listenThread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100, 16, 2, 4, 44100, true);
-                    SourceDataLine speakers;
-                    DataLine.Info dataLineInfo = new DataLine.Info(SourceDataLine.class, format);
-                    speakers = (SourceDataLine) AudioSystem.getLine(dataLineInfo);
-                    speakers.open(format);
-                    speakers.start();
-                    try {
-                        DatagramSocket serverSocket = new DatagramSocket(5555);
-                        isListening = true;
-                        while (isListening) {
-                            byte[] buffer = new byte[1024];
-                            DatagramPacket response = new DatagramPacket(buffer, buffer.length);
-                            serverSocket.receive(response);
-                            speakers.write(response.getData(), 0, response.getData().length);
-                            jProgressBar1.setValue((int) volumeRMS(response.getData()));
-                        }
-                        speakers.close();
-                        serverSocket.close();
-                    } catch (SocketTimeoutException ex) {
-                        System.out.println("Timeout error: " + ex.getMessage());
-                        ex.printStackTrace();
-                    } catch (IOException ex) {
-                        System.out.println("Client error: " + ex.getMessage());
-                        ex.printStackTrace();
-                    }
-                } catch (LineUnavailableException ex) {
-                    ex.printStackTrace();
-                }
-            }
-
-        };
-        listenThread.start();
-    }
-
-    private int getMax(byte[] bytes) {
-        int max = bytes[0];
-        for (int i = 1; i < bytes.length; i++) {
-            if (bytes[i] > max) max = bytes[i];
-        }
-        return max;
-    }
-
-    public double volumeRMS(byte[] raw) {
-        double sum = 0d;
-        if (raw.length == 0) {
-            return sum;
-        } else {
-            for (byte b : raw) {
-                sum += b;
-            }
-        }
-        double average = sum / raw.length;
-
-        double sumMeanSquare = 0d;
-        for (byte b : raw) {
-            sumMeanSquare += Math.pow(b - average, 2d);
-        }
-        double averageMeanSquare = sumMeanSquare / raw.length;
-        return Math.sqrt(averageMeanSquare);
-    }
-
-    public void voiceStopListening() {
-        isListening = false;
-    }
-
-    public void addVoiceMessage(String message) {
-        String temp = messageTextArea.getText();
-        temp += competitor.getNickname() + " " + message + "\n";
-        messageTextArea.setText(temp);
-        messageTextArea.setCaretPosition(messageTextArea.getDocument().getLength());
-    }
 
     public void newgame() {
 
@@ -1543,7 +1356,8 @@ public class GameClientFrm extends javax.swing.JFrame {
             timer.stop();
             setEnableButton(false);
             increaseWinMatchToCompetitor();
-            Client.openView(Client.View.GAME_NOTICE, "Bạn đã thua", "Đang thiết lập ván chơi mới");
+//            Client.openView(Client.View.GAME_NOTICE, "Bạn đã thua", "Đang thiết lập ván chơi mới");
+            showRematchGameDialog("Bạn đã thua");
         }
     }
 
